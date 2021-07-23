@@ -18,11 +18,6 @@ defmodule BtcScheduler.CoinWorkerSupervisor do
   end
 
   def stop_coin_worker(coin_id) when is_binary(coin_id) do
-    with worker_pid <- Process.whereis(String.to_atom(coin_id)),
-         true <- is_pid(worker_pid) do
-      DynamicSupervisor.terminate_child(__MODULE__, worker_pid)
-    else
-      false -> {:error, :nil_pid}
-    end
+    GenServer.stop(String.to_atom(coin_id))
   end
 end

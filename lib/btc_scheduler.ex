@@ -33,18 +33,17 @@ defmodule BtcScheduler do
 
   """
   def remove_coin(coin_id) when is_binary(coin_id) do
-    with {:ok, coin} <- CoinContext.get_coin(coin_id),
-         {:ok, coin} <- CoinContext.delete_coin(coin),
-         :ok <- CoinWorkerSupervisor.stop_coin_worker(coin.coin_id) do
-      IO.inspect("#{coin.coin_id} has been removed from DB and the Supervision tree.",
+    with {1, nil} <- CoinContext.delete_coin_by_name(coin_id),
+         :ok <- CoinWorkerSupervisor.stop_coin_worker(coin_id) do
+      IO.inspect("#{coin_id} has been removed from DB and the Supervision tree.",
         label: "INFO"
       )
     else
       {:error, :nil_pid} ->
         IO.inspect("The #{coin_id} has been removed from DB.", label: "INFO")
 
-      {:error, reason} ->
-        IO.inspect("Non existing coin_id to remove! Reason: #{reason}", label: "ERROR")
+      {0, _} ->
+        IO.inspect("Non existing coin_id to remove from DB!", label: "INFO")
 
       other ->
         IO.inspect(other, label: "remove_coin OTHER")

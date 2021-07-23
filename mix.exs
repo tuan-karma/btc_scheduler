@@ -25,7 +25,8 @@ defmodule BtcScheduler.MixProject do
       {:httpoison, "~> 1.8"},
       {:jason, "~> 1.2"},
       {:ecto_sql, "~> 3.0"},
-      {:postgrex, ">= 0.0.0"}
+      {:postgrex, ">= 0.0.0"},
+      {:timex, "~> 3.7"}
     ]
   end
 end
